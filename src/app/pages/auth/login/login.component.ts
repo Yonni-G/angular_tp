@@ -47,6 +47,7 @@ export class LoginComponent {
         username: this.loginForm.get('username')?.value || '',
         password: this.loginForm.get('password')?.value || '',
       };
+      
       if (this.authService.checkUser(user)) {
         this.router.navigate(['/profil']);
       } else this.messageService.setMessage('Identifiants incorrects !');
