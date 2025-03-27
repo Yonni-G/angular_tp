@@ -31,14 +31,7 @@ export class LoginComponent {
     password: new FormControl(null, [Validators.required]),
   });
 
-  // Use getters for cleaner HTML code
-  get email() {
-    return this.loginForm.get('email');
-  }
 
-  get password() {
-    return this.loginForm.get('password');
-  }
 
   onSubmit() {
     if (this.loginForm.valid) {
@@ -47,9 +40,9 @@ export class LoginComponent {
         username: this.loginForm.get('username')?.value || '',
         password: this.loginForm.get('password')?.value || '',
       };
-      
+
       if (this.authService.checkUser(user)) {
-        this.router.navigate(['/profil']);
+        this.router.navigate(['/search']);
       } else this.messageService.setMessage('Identifiants incorrects !');
     } else this.messageService.setMessage('Un des champs est manquant !');
   }
