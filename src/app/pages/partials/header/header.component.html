@@ -1,0 +1,14 @@
+<header>
+  <h1>Mon App</h1>
+  <nav>
+    @if(!isAuthenticated) {
+    <a routerLink="/registration" routerLinkActive="active">S'enregistrer</a>
+    <a routerLink="/login" routerLinkActive="active">Se connecter</a>
+
+    }
+    @if(isAuthenticated) {
+    <a routerLink="/profil" routerLinkActive="active">Mon profil</a>
+    <button (click)="loggout()">Se déconnecter</button>
+    }
+  </nav>
+</header>

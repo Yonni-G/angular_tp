@@ -1,0 +1,77 @@
+@if(message) {
+<div
+  class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md shadow-md"
+>
+  {{ message }}
+</div>
+
+}
+
+<div class="flex justify-center min-h-screen">
+  <div class="w-full max-w-xs">
+    <form
+      (submit)="onSubmit()"
+      [formGroup]="loginForm"
+      class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+    >
+      <div class="mb-4">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="username"
+        >
+          Pseudo
+        </label>
+        <input
+          formControlName="username"
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="username"
+          type="text"
+          placeholder="Username"
+        />
+        @if(loginForm.get("username")?.touched &&
+        loginForm.get("username")?.invalid) {
+        @if(loginForm.get('username')?.hasError('minlength')) {
+        <p class="text-red-500 text-xs italic">Min. 6 caractères</p>
+        } }
+      </div>
+      <div class="mb-6">
+        <label
+          class="block text-gray-700 text-sm font-bold mb-2"
+          for="password"
+        >
+          Mot de passe
+        </label>
+        <input
+          formControlName="password"
+          class="shadow appearance-none border w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          id="password"
+          type="password"
+          placeholder="******************"
+        />
+        @if(loginForm.get("password")?.touched &&
+        loginForm.get("password")?.invalid) {
+        @if(loginForm.get('password')?.hasError('required')) {
+        <p class="text-red-500 text-xs italic">Champ obligatoire</p>
+        } }
+      </div>
+      <div class="flex items-center justify-between">
+        <button
+        [disabled]="!loginForm.valid"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="submit"
+        >
+          Sign In
+        </button>
+        <a
+          class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+          href="#"
+        >
+          Forgot Password?
+        </a>
+      </div>
+    </form>
+    <p class="text-center text-gray-500 text-xs">
+      &copy;2020 Acme Corp. All rights reserved.
+    </p>
+  </div>
+</div>
