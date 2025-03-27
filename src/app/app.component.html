@@ -1,5 +1,17 @@
-<app-header />
-<main>
+<app-header></app-header>
 
-<router-outlet></router-outlet></main>
-<app-footer />
+<main>
+  <div class="layout">
+    <!-- Playlist à gauche -->
+    <div class="playlist">
+      <app-playlist></app-playlist>
+    </div>
+
+    <!-- Contenu à droite -->
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</main>
+
+<app-footer></app-footer>
