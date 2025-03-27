@@ -25,6 +25,8 @@ export class AuthService {
       if (parsedUser.username) {
         if (parsedUser.username === user.username) {
           this.isLoggedIn.set(true);
+          // on cree une session utilisateur
+          sessionStorage.setItem('username', parsedUser.username)
           return true;
         }
       }
@@ -34,10 +36,12 @@ export class AuthService {
 
   loggout() {
     this.isLoggedIn.set(false);
+    sessionStorage.removeItem('username')
     this.route.navigate(['/login']);
+
   }
 
   isAuthenticated(): boolean {
-    return true;//this.isLoggedIn();
+    return !!sessionStorage.getItem('username')
   }
 }
