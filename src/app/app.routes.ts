@@ -4,10 +4,12 @@ import { LoginComponent } from './pages/auth/login/login.component';
 import { ProfilComponent } from './pages/auth/profil/profil.component';
 import { authGuard } from './guards/auth.guard';
 import { SearchComponent } from './pages/youtube/search/search.component';
+import { WatchComponent } from './pages/youtube/watch/watch.component';
 
 export const routes: Routes = [
   { path: 'registration', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'profil', component: ProfilComponent, canActivate: [authGuard] },
   { path: 'search', component: SearchComponent, canActivate: [authGuard] },
+  { path: 'watch/:id', component: WatchComponent, canActivate: [authGuard] },
 ];

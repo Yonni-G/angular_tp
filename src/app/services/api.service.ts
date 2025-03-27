@@ -22,9 +22,23 @@ export class ApiService {
       part: 'snippet',
       maxResults: '25',
       q: search,
-      key: this.apiKey
+      key: this.apiKey,
     };
 
     return this.http.get<Videos>(`${API_YT_BASE}search`, { params });
+  }
+
+  fetchVideo(id: string): Observable<Videos> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.apiKey}`,
+    });
+
+    const params = {
+      part: 'snippet,contentDetails,statistics',
+      id: id,
+      key: this.apiKey,
+    };
+
+    return this.http.get<Videos>(`${API_YT_BASE}videos`, { params });
   }
 }
