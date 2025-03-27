@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { Videos } from '../models/youtube/videos';
+import { Observable } from 'rxjs';
 
 const API_YT_BASE = environment.youtube_api;
 
@@ -12,7 +13,7 @@ export class ApiService {
   private readonly http: HttpClient = inject(HttpClient);
   private readonly apiKey = 'AIzaSyAAb2fkffMP0-G8kwmfAuLapQrgabeELc8';
 
-  fetchVideos(search: string) {
+  fetchVideos(search: string): Observable<Videos> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${this.apiKey}`,
     });
@@ -21,8 +22,9 @@ export class ApiService {
       part: 'snippet',
       maxResults: '25',
       q: search,
+      key: this.apiKey
     };
 
-    return this.http.get<Videos>(`${API_YT_BASE}search`, { headers, params });
+    return this.http.get<Videos>(`${API_YT_BASE}search`, { params });
   }
 }
