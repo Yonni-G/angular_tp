@@ -2,46 +2,68 @@ import { inject, Injectable } from '@angular/core';
 import { signal } from '@angular/core';
 import { User } from '../models/user';
 import { Router } from '@angular/router';
+import { DbapiService } from './dbapi.service';
+import { BehaviorSubject, map, Observable } from 'rxjs';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  // Mise en place de la logique d'authentification
-  // Cookie, Session, Token : Observable
+  private readonly tokenSubject: BehaviorSubject<string | null> =
+    new BehaviorSubject<string | null>(null);
+  public token$: Observable<string | null> = this.tokenSubject.asObservable();
 
-  private readonly isLoggedIn = signal<boolean>(false);
-  private readonly route: Router = inject(Router);
+  private readonly dbapiService = inject(DbapiService);
+  private readonly router = inject(Router);
 
-  createUser(user: User) {
-    // Sauvegarde l'utilisateur dans le localStorage
-    localStorage.setItem('user', JSON.stringify(user));
+  constructor() {
+    this.loadToken(); // Charger le jeton au démarrage pour garder l'état d'authentification
   }
 
-  checkUser(user: User): boolean {
-    const localUser = localStorage.getItem('user');
-    if (localUser) {
-      const parsedUser: User = JSON.parse(localUser);
-      if (parsedUser.username) {
-        if (parsedUser.username === user.username) {
-          this.isLoggedIn.set(true);
-          // on cree une session utilisateur
-          sessionStorage.setItem('username', parsedUser.username)
-          return true;
+  // Méthode pour stocker le jeton et notifier les abonnés
+  storeToken(token: string): void {
+    localStorage.setItem('authToken', token);
+    this.tokenSubject.next(token); // Met à jour le Subject avec le nouveau jeton
+  }
+
+  // Méthode pour récupérer le jeton du localStorage et mettre à jour le Subject
+  loadToken(): void {
+    const token = localStorage.getItem('authToken');
+    this.tokenSubject.next(token); // Met à jour le Subject avec le jeton récupéré
+  }
+
+  // Méthode pour supprimer le jeton et notifier les abonnés
+  removeToken(): void {
+    localStorage.removeItem('authToken');
+    this.tokenSubject.next(null); // Met à jour le Subject avec null (déconnexion)
+  }
+
+  // Méthode pour vérifier si l'utilisateur est authentifié (en fonction de la présence du jeton)
+  isAuthenticated(): Observable<boolean> {
+    return this.token$.pipe(map((token) => !!token)); // Si un token est présent, renvoie true
+  }
+
+  // Méthode pour ajouter un utilisateur (enregistrement)
+  addUser(user: User): Observable<any> {
+    return this.dbapiService.fetchRegister(user);
+  }
+
+  // Méthode pour connecter l'utilisateur et stocker le jeton
+  login(user: User): Observable<any> {
+    return this.dbapiService.fetchLogin(user).pipe(
+      map((response: any) => {
+        if (response && response.token) {
+          this.storeToken(response.token); // Stocke le jeton JWT après une connexion réussie
         }
-      }
-    }
-    return false;
+        return response;
+      })
+    );
   }
 
-  loggout() {
-    this.isLoggedIn.set(false);
-    sessionStorage.removeItem('username')
-    this.route.navigate(['/login']);
-
-  }
-
-  isAuthenticated(): boolean {
-    return !!sessionStorage.getItem('username')
+  // Méthode pour déconnecter l'utilisateur
+  logout(): void {
+    this.removeToken(); // Supprimer le jeton
+    this.router.navigate(['/login']); // Redirige vers la page de connexion
   }
 }

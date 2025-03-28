@@ -9,6 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { MessageService } from '../../../services/message.service';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'app-login',
@@ -31,37 +32,26 @@ export class LoginComponent {
     password: new FormControl(null, [Validators.required]),
   });
 
-
-
   onSubmit() {
     if (this.loginForm.valid) {
-      const user = {
-        name: '',
+      const user: User = {
         username: this.loginForm.get('username')?.value || '',
+        email: '',
         password: this.loginForm.get('password')?.value || '',
       };
 
-      if (this.authService.checkUser(user)) {
-        this.router.navigate(['/search']);
-      } else this.messageService.setMessage('Identifiants incorrects !');
-    } else this.messageService.setMessage('Un des champs est manquant !');
+      this.authService.login(user).subscribe({
+        next: (response) => {
+          this.router.navigate(['/search']);
+        },
+        error: (error) => {
+          this.messageService.setMessage(
+            error.error.message || 'Une erreur est survenue'
+          );
+        },
+      });
+    }
   }
-
-  /*
-  checkLogin() {
-    if (this.username && this.password) {
-      const user = {
-        name: '',
-        username: this.username,
-        password: this.password,
-      };
-
-      if (this.authService.checkUser(user)) {
-        this.router.navigate(['/profil']);
-      } else this.messageService.setMessage('Identifiants incorrects !');
-    } else this.messageService.setMessage('Un des champs est manquant !');
-  }
-    */
 
   ngOnInit(): void {
     this.messageService.currentMessage.subscribe((msg) => {

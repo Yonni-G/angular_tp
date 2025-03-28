@@ -25,7 +25,7 @@ export class ApiService {
       key: this.apiKey,
     };
 
-    return this.http.get<Videos>(`${API_YT_BASE}search`, { params });
+    return this.http.get<Videos>(`${API_YT_BASE}/search`, { params });
   }
 
   fetchVideo(id: string): Observable<Videos> {
@@ -39,6 +39,6 @@ export class ApiService {
       key: this.apiKey,
     };
 
-    return this.http.get<Videos>(`${API_YT_BASE}videos`, { params });
+    return this.http.get<Videos>(`${API_YT_BASE}/videos`, { params });
   }
 }
