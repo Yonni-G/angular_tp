@@ -57,7 +57,7 @@ router.post('/login', async (req, res) => {
       { expiresIn: '1h' }  // Le token expire après 1 heure
     );
 
-    res.json({ message: 'Connexion réussie', token });
+    res.json({ message: 'Connexion réussie', token, username: user.username });
   } catch (error) {
     res.status(500).json({ message: 'Erreur serveur', error });
   }

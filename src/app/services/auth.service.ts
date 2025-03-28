@@ -12,7 +12,12 @@ import { HttpHeaders } from '@angular/common/http';
 export class AuthService {
   private readonly tokenSubject: BehaviorSubject<string | null> =
     new BehaviorSubject<string | null>(null);
+  private readonly usernameSubject: BehaviorSubject<string | null> =
+    new BehaviorSubject<string | null>(null);
+
   public token$: Observable<string | null> = this.tokenSubject.asObservable();
+  public username$: Observable<string | null> =
+    this.usernameSubject.asObservable();
 
   private readonly dbapiService = inject(DbapiService);
   private readonly router = inject(Router);
@@ -22,9 +27,10 @@ export class AuthService {
   }
 
   // Méthode pour stocker le jeton et notifier les abonnés
-  storeToken(token: string): void {
+  storeToken(token: string, username: string): void {
     localStorage.setItem('authToken', token);
     this.tokenSubject.next(token); // Met à jour le Subject avec le nouveau jeton
+    this.usernameSubject.next(username); // Met à jour le Subject avec le nouveau jeton
   }
 
   // Méthode pour récupérer le jeton du localStorage et mettre à jour le Subject
@@ -37,6 +43,7 @@ export class AuthService {
   removeToken(): void {
     localStorage.removeItem('authToken');
     this.tokenSubject.next(null); // Met à jour le Subject avec null (déconnexion)
+    this.usernameSubject.next(null); 
   }
 
   // Méthode pour vérifier si l'utilisateur est authentifié (en fonction de la présence du jeton)
@@ -54,7 +61,7 @@ export class AuthService {
     return this.dbapiService.fetchLogin(user).pipe(
       map((response: any) => {
         if (response && response.token) {
-          this.storeToken(response.token); // Stocke le jeton JWT après une connexion réussie
+          this.storeToken(response.token, response.username); // Stocke le jeton JWT après une connexion réussie
         }
         return response;
       })
