@@ -36,4 +36,10 @@ export class DbapiService {
     });
   }
 
+  fetchGetUser() {
+    return this.http.get<any>(`${API_DB_BASE}/user`, {
+      headers: this.getHeaders()
+    });
+  }
+
 }

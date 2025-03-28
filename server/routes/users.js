@@ -9,6 +9,29 @@ const router = express.Router();
 // Clé secrète pour signer les tokens
 const JWT_SECRET = process.env.JWT_SECRET || 'votre_clé_secrète'; // Il est important de ne pas exposer cette clé
 
+// Route pour obtenir les infos de profil d'un utilisateur
+// Utilisation de ton middleware 'verifyToken' pour vérifier le token avant d'accéder à la route
+router.get('/user', verifyToken, async (req, res) => {
+  try {
+    // Récupère l'utilisateur depuis la base de données en utilisant l'ID de l'utilisateur présent dans 'req.user'
+    const user = await User.findById(req.user.userId);  // Assumes that 'userId' is the key from the token payload
+
+    if (!user) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+
+    // Renvoie les informations de l'utilisateur (ici on retourne 'username' et 'email' comme exemple)
+    res.json({
+      username: user.username,
+      email: user.email,
+      // Ajouter d'autres informations que tu souhaites retourner
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur interne du serveur' });
+  }
+});
+
 // Route pour enregistrer un utilisateur
 router.post('/register', async (req, res) => {
   try {

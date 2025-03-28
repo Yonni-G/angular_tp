@@ -37,13 +37,14 @@ export class AuthService {
   loadToken(): void {
     const token = localStorage.getItem('authToken');
     this.tokenSubject.next(token); // Met à jour le Subject avec le jeton récupéré
+    
   }
 
   // Méthode pour supprimer le jeton et notifier les abonnés
   removeToken(): void {
     localStorage.removeItem('authToken');
     this.tokenSubject.next(null); // Met à jour le Subject avec null (déconnexion)
-    this.usernameSubject.next(null); 
+    this.usernameSubject.next(null);
   }
 
   // Méthode pour vérifier si l'utilisateur est authentifié (en fonction de la présence du jeton)
@@ -54,6 +55,10 @@ export class AuthService {
   // Méthode pour ajouter un utilisateur (enregistrement)
   addUser(user: User): Observable<any> {
     return this.dbapiService.fetchRegister(user);
+  }
+  
+  getUser(): Observable<any> {
+    return this.dbapiService.fetchGetUser();
   }
 
   // Méthode pour connecter l'utilisateur et stocker le jeton
