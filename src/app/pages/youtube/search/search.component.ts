@@ -45,14 +45,4 @@ export class SearchComponent {
       });
     }
   }
-  test() {
-    this.authService.test().subscribe({
-      next: (response) => {
-        alert(response.message);
-      },
-      error: (error: Error) => {
-        
-      }
-    });
-  }
 }

@@ -63,11 +63,6 @@ router.post('/login', async (req, res) => {
   }
 });
 
-
-router.get('/test', verifyToken, (req, res) => {
-  res.json({ message: 'prout' });
-})
-
 // Route protégée (exemple)
 router.get('/protected', verifyToken, (req, res) => {
   res.json({ message: 'Accès à une route protégée', user: req.user });

@@ -36,9 +36,4 @@ export class DbapiService {
     });
   }
 
-  fetchTest(): Observable<any> {
-    return this.http.get<any>(`${API_DB_BASE}/test`, {
-      
-    });
-  }
 }

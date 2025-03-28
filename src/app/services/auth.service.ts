@@ -66,8 +66,4 @@ export class AuthService {
     this.removeToken(); // Supprimer le jeton
     this.router.navigate(['/login']); // Redirige vers la page de connexion
   }
-
-  test(): Observable<any> {
-    return this.dbapiService.fetchTest();
-  }
 }
