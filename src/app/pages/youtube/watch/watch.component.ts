@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { Item, Videos } from '../../../models/youtube/videos';
 import { ApiService } from '../../../services/api.service';
 import { ActivatedRoute } from '@angular/router';
+import { PlaylistComponent } from "../playlist/playlist.component";
 
 @Component({
   selector: 'app-watch',
-  imports: [],
+  imports: [PlaylistComponent],
   templateUrl: './watch.component.html',
   styleUrl: './watch.component.scss',
 })

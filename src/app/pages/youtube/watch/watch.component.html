@@ -1,4 +1,17 @@
-<video className="h-full w-full rounded-lg" controls>
-  <source [src]="'https://www.youtube.com/embed/' + video.id.videoId" type="video/mp4" />
-  Your browser does not support the video tag.
-</video>
+<div class="flex">
+  <!-- Colonne gauche : Playlist -->
+  <div class="w-1/6 p-4">
+    <app-playlist />
+  </div>
+
+  <!-- Colonne droite : Recherche et résultats -->
+  <div class="w-5/6 p-4">
+    <video className="h-full w-full rounded-lg" controls>
+      <source
+        [src]="'https://www.youtube.com/embed/' + video.id.videoId"
+        type="video/mp4"
+      />
+      Your browser does not support the video tag.
+    </video>
+  </div>
+</div>

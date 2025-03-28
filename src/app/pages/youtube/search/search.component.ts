@@ -9,16 +9,19 @@ import {
 import { Item, Videos } from '../../../models/youtube/videos';
 import { ApiService } from '../../../services/api.service';
 import { RouterLink } from '@angular/router';
+import { PlaylistComponent } from "../playlist/playlist.component";
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-search',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, PlaylistComponent],
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
 })
 export class SearchComponent {
   videos!: Item[];
   private readonly apiService: ApiService = inject(ApiService);
+  private readonly authService: AuthService = inject(AuthService);
 
   youtubeSearchForm = new FormGroup({
     search: new FormControl(null, [
@@ -29,7 +32,7 @@ export class SearchComponent {
 
   onSubmit() {
     if (this.youtubeSearchForm.valid) {
-      const searchValue = this.youtubeSearchForm.get('search')?.value ?? ''; 
+      const searchValue = this.youtubeSearchForm.get('search')?.value ?? '';
 
       this.apiService.fetchVideos(searchValue).subscribe({
         next: (response: Videos) => {
@@ -41,5 +44,15 @@ export class SearchComponent {
         },
       });
     }
+  }
+  test() {
+    this.authService.test().subscribe({
+      next: (response) => {
+        alert(response.message);
+      },
+      error: (error: Error) => {
+        
+      }
+    });
   }
 }

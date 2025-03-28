@@ -1,69 +1,94 @@
-<section class="flex flex-col items-center pt-6">
-  <div
-    class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
-  >
-    <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-      <h1
-        class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
-      >
-        Recherche de vidéos Youtube
-      </h1>
-      <form
-      (submit)="onSubmit()"
-      [formGroup]="youtubeSearchForm"
-      class="space-y-4 md:space-y-6">
-        <div>
-          <label
-            for="name"
-            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >Recherche</label
-          >
-          <input
-          formControlName="search"
-            type="text"
-            name="name"
-            id="search"
-            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Rechercher..."
-            required=""
-          />
-                    @if(youtubeSearchForm.get("search")?.touched &&
-        youtubeSearchForm.get("search")?.invalid) {
-        @if(youtubeSearchForm.get('search')?.hasError('minlength')) {
-        <p class="text-red-500 text-xs italic">Min. 6 caractères</p>
-        } }
-        </div>
-        
-        <button
-        [disabled]="!youtubeSearchForm.valid"
-          type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Rechercher
-        </button>
-      </form>
-    </div>
+<div class="flex">
+  <!-- Colonne gauche : Playlist -->
+  <div class="w-1/6 p-4">
+    <app-playlist />
   </div>
-</section>
 
-<section class="flex flex-wrap justify-center gap-6">
-@for (video of videos; track video.id) {
-<div class="relative flex flex-col my-6 bg-white shadow-sm border border-slate-200 rounded-lg w-96">
-  <div class="relative h-56 m-2.5 overflow-hidden text-white rounded-md">
-    <a [routerLink]="['/watch', video.id.videoId ]"><img src="{{ video.snippet.thumbnails.medium.url }}" width="{{ video.snippet.thumbnails.medium.width }}" alt="card-image" /></a>
+  <!-- Colonne droite : Recherche et résultats -->
+  <div class="w-5/6 p-4">
+    <section class="flex flex-col items-center pt-6">
+      <div
+        class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
+      >
+        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+          <h1
+            class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
+          >
+            Recherche de vidéos Youtube
+          </h1>
+          <form
+            (submit)="onSubmit()"
+            [formGroup]="youtubeSearchForm"
+            class="space-y-4 md:space-y-6"
+          >
+            <div>
+              <label
+                for="name"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Recherche</label
+              >
+              <input
+                formControlName="search"
+                type="text"
+                name="name"
+                id="search"
+                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Rechercher..."
+                required=""
+              />
+              @if(youtubeSearchForm.get("search")?.touched &&
+              youtubeSearchForm.get("search")?.invalid) {
+              @if(youtubeSearchForm.get('search')?.hasError('minlength')) {
+              <p class="text-red-500 text-xs italic">Min. 6 caractères</p>
+              } }
+            </div>
+
+            <button
+              [disabled]="!youtubeSearchForm.valid"
+              type="submit"
+              class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Rechercher
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <button (click)="test()">test</button>
+
+    <!-- Résultats de recherche -->
+    <section class="flex flex-wrap justify-center gap-6">
+      @for (video of videos; track video.id) {
+      <div
+        class="relative flex flex-col my-6 bg-white shadow-sm border border-slate-200 rounded-lg w-96"
+      >
+        <div class="relative h-56 m-2.5 overflow-hidden text-white rounded-md">
+          <a [routerLink]="['/watch', video.id.videoId ]"
+            ><img
+              src="{{ video.snippet.thumbnails.medium.url }}"
+              width="{{ video.snippet.thumbnails.medium.width }}"
+              alt="card-image"
+          /></a>
+        </div>
+        <div class="p-4">
+          <h6 class="mb-2 text-slate-800 text-xl font-semibold">
+            {{ video.snippet.title }}
+          </h6>
+          <p class="text-slate-600 leading-normal font-light">
+            {{ video.snippet.description }}
+          </p>
+        </div>
+        <div class="px-4 pb-4 pt-0 mt-2">
+          <button
+            class="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            type="button"
+          >
+            [+] Ajouter
+          </button>
+        </div>
+      </div>
+      }
+    </section>
   </div>
-  <div class="p-4">
-    <h6 class="mb-2 text-slate-800 text-xl font-semibold">
-      {{ video.snippet.title }}
-    </h6>
-    <p class="text-slate-600 leading-normal font-light">
-      {{ video.snippet.description }}
-    </p>
-  </div>
-  <div class="px-4 pb-4 pt-0 mt-2">
-    <button class="rounded-md bg-slate-800 py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
-      [+] Ajouter
-    </button>
-  </div>
-</div>  
-}
-</section>
+</div>

@@ -33,6 +33,7 @@ export class LoginComponent {
   });
 
   onSubmit() {
+
     if (this.loginForm.valid) {
       const user: User = {
         username: this.loginForm.get('username')?.value || '',
@@ -60,5 +61,6 @@ export class LoginComponent {
         setTimeout(() => this.messageService.clearMessage(), 2000); // Efface après 5s
       }
     });
+   
   }
 }
