@@ -11,15 +11,23 @@ import { ApiService } from '../../../services/api.service';
 import { RouterLink } from '@angular/router';
 import { PlaylistComponent } from "../playlist/playlist.component";
 import { AuthService } from '../../../services/auth.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-search',
-  imports: [ReactiveFormsModule, RouterLink, PlaylistComponent],
+  imports: [ReactiveFormsModule, RouterLink, PlaylistComponent, AsyncPipe],
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
 })
 export class SearchComponent {
   videos!: Item[];
+  //isLoading: boolean = false;
+
+  private readonly isLoadingSubject: BehaviorSubject<boolean> =
+    new BehaviorSubject<boolean>(false); // Initialisation avec la valeur false
+  public isLoading: Observable<boolean> = this.isLoadingSubject.asObservable();
+
   private readonly apiService: ApiService = inject(ApiService);
   private readonly authService: AuthService = inject(AuthService);
 
@@ -34,6 +42,7 @@ export class SearchComponent {
     if (this.youtubeSearchForm.valid) {
       const searchValue = this.youtubeSearchForm.get('search')?.value ?? '';
 
+      this.isLoadingSubject.next(true)
       this.apiService.fetchVideos(searchValue).subscribe({
         next: (response: Videos) => {
           //console.log(response);
@@ -42,6 +51,9 @@ export class SearchComponent {
         error: (error: Error) => {
           //console.error(error);
         },
+        complete: () => {
+          this.isLoadingSubject.next(false);
+        }
       });
     }
   }
